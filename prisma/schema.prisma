@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Produtores {
+  id                       String   @id @default(cuid())
+  cpfCnpj                  String   @map("cpf_cnpj")
+  nome                     String
+  nomeFazenda              String   @map("nome_fazenda")
+  cidade                   String
+  estado                   String
+  areaTotalHectares        Float    @map("area_total_hectares")
+  areaAgricultavelHectares Float    @map("area_agricultavel_hectares")
+  areaVegetacaoHectares    Float    @map("area_vegetacao_hectares")
+  created_at               DateTime @map("created_at")
+  updated_at               DateTime @map("updated_at")
+
+  FazencaCulturas FazendaCulturas[]
+
+  @@map("produtores")
+}
+
+model Culturas {
+  id         String   @id @default(cuid())
+  nome       String
+  created_at DateTime @map("created_at")
+  updated_at DateTime @map("updated_at")
+
+  FazencaCulturas FazendaCulturas[]
+
+  @@map("culturas")
+}
+
+model FazendaCulturas {
+  id         String   @id @default(cuid())
+  created_at DateTime @map("created_at")
+  updated_at DateTime @map("updated_at")
+
+  culturaId String    @map("culturas_id")
+  Culturas  Culturas? @relation(fields: [culturaId], references: [id])
+
+  produtorId String?
+  Produtores Produtores? @relation(fields: [produtorId], references: [id])
+
+  @@map("fazenda_culturas")
+}
