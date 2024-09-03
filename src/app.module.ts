@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ProducersModule } from './modules/producers/producers.module';
+import { RouterModule } from '@nestjs/core';
+import { ProducersModule } from './core/application/modules/producers.module';
+import { ROUTERS } from './shared/constants/routes.constants';
 
 @Module({
-  imports: [ProducersModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [RouterModule.register(ROUTERS), ProducersModule],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
