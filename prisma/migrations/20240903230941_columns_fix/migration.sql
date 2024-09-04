@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE "culturas" ALTER COLUMN "created_at" DROP NOT NULL,
+ALTER COLUMN "created_at" SET DEFAULT CURRENT_TIMESTAMP,
+ALTER COLUMN "updated_at" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "fazenda_culturas" ALTER COLUMN "created_at" DROP NOT NULL,
+ALTER COLUMN "created_at" SET DEFAULT CURRENT_TIMESTAMP,
+ALTER COLUMN "updated_at" DROP NOT NULL;

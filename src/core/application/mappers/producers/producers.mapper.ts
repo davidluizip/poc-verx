@@ -1,9 +1,9 @@
-import { Produtores } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { ProducersCreateDTO } from '../../dto/producers/producers.create.dto';
 
 export function mapToPrisma(
   data: ProducersCreateDTO,
-): Omit<Produtores, 'id' | 'createdAt' | 'updatedAt' | 'FazendaCulturas'> {
+): Prisma.ProdutoresCreateInput {
   return {
     cpfCnpj: data?.cpfCnpj,
     nome: data?.nome,
@@ -13,5 +13,10 @@ export function mapToPrisma(
     areaTotalHectares: data?.areaTotalHectares,
     areaAgricultavelHectares: data?.areaAgricultavelHectares,
     areaVegetacaoHectares: data?.areaVegetacaoHectares,
+    FazendaCulturas: {
+      create: {
+        culturaId: data?.culturaId,
+      },
+    },
   };
 }

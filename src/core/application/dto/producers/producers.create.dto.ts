@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsNumber, IsString, Min } from 'class-validator';
+import { IsValidArea } from 'src/shared/utils/decorators/valid-area.decorator';
+import {
+  IsCpfOrCnpj,
+  removeMask,
+} from 'src/shared/utils/decorators/valid-cpf-cnpj.decorator';
 
 export class ProducersCreateDTO {
   @ApiProperty({
@@ -8,6 +14,8 @@ export class ProducersCreateDTO {
     description: 'CPF ou CNPJ do produtor',
   })
   @IsString()
+  @IsCpfOrCnpj()
+  @Transform(({ value }) => removeMask(value), { toClassOnly: true })
   cpfCnpj: string;
 
   @ApiProperty({
@@ -25,6 +33,14 @@ export class ProducersCreateDTO {
   })
   @IsString()
   nomeFazenda: string;
+
+  @ApiProperty({
+    required: true,
+    example: 1,
+    description: 'ID da cultura',
+  })
+  @IsNumber()
+  culturaId: number;
 
   @ApiProperty({
     required: true,
@@ -48,6 +64,10 @@ export class ProducersCreateDTO {
   })
   @IsNumber({}, { message: 'Área total deve ser um número' })
   @Min(0, { message: 'Área total deve ser maior ou igual a 0' })
+  @IsValidArea({
+    message:
+      'A soma da área agricultável e da área de vegetação não pode ser maior que a área total.',
+  })
   areaTotalHectares: number;
 
   @ApiProperty({
@@ -56,6 +76,10 @@ export class ProducersCreateDTO {
   })
   @IsNumber({}, { message: 'Área agricultável deve ser um número' })
   @Min(0, { message: 'Área agricultável deve ser maior ou igual a 0' })
+  @IsValidArea({
+    message:
+      'A soma da área agricultável e da área de vegetação não pode ser maior que a área total.',
+  })
   areaAgricultavelHectares: number;
 
   @ApiProperty({
@@ -64,5 +88,9 @@ export class ProducersCreateDTO {
   })
   @IsNumber({}, { message: 'Área de vegetação deve ser um número' })
   @Min(0, { message: 'Área de vegetação deve ser maior ou igual a 0' })
+  @IsValidArea({
+    message:
+      'A soma da área agricultável e da área de vegetação não pode ser maior que a área total.',
+  })
   areaVegetacaoHectares: number;
 }
